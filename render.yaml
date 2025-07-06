@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: agentcy-backend
+    env: node
+    plan: starter
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: agentcy-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: agentcy-redis
+          property: connectionString
+
+databases:
+  - name: agentcy-db
+    plan: starter
+
+services:
+  - type: redis
+    name: agentcy-redis
+    plan: starter
